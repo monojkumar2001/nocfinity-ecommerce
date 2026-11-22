@@ -20,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Cloudflare / reverse-proxy tunnels terminate TLS; trust X-Forwarded-* so
+        // Secure cookies + CSRF + URL generation work over HTTPS demos.
+        $middleware->trustProxies(at: '*');
+
         $middleware->append(SecurityHeaders::class);
         $middleware->append(HandleCors::class);
 

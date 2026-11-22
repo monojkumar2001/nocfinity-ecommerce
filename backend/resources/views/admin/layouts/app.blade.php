@@ -22,7 +22,7 @@
     <aside class="ma-sidebar" id="maSidebar">
         <div class="ma-brand">
             <a class="ma-brand-logo" href="{{ route('admin.dashboard') }}" aria-label="SHOP.CO Admin">
-                <img src="{{ asset('images/shopco-logo.png') }}" alt="SHOP.CO">
+                <img src="{{ asset('images/admin-logo.png') }}" alt="SHOP.CO">
             </a>
         </div>
 

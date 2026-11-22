@@ -3,7 +3,6 @@
 **/vendor/
 
 # Env
-**/.env
 **/.env.local
 **/.env.*.local
 !.env.example
@@ -30,7 +29,6 @@
 
 # IDE / OS
 .idea/
-.vscode/
 *.swp
 .DS_Store
 Thumbs.db
@@ -45,3 +43,4 @@ Thumbs.db
 *.pem
 npm-debug.log*
 yarn-error.log*
+config.bat
