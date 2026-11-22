@@ -1,0 +1,47 @@
+# Dependencies
+**/node_modules/
+**/vendor/
+
+# Env
+**/.env
+**/.env.local
+**/.env.*.local
+!.env.example
+!**/.env.example
+
+# Build / cache
+**/backend/bootstrap/cache/*.php
+!**/backend/bootstrap/cache/.gitignore
+**/backend/storage/*.key
+**/backend/storage/app/public/*
+!**/backend/storage/app/public/.gitignore
+**/backend/storage/framework/cache/data/*
+!**/backend/storage/framework/cache/data/.gitignore
+**/backend/storage/framework/sessions/*
+!**/backend/storage/framework/sessions/.gitignore
+**/backend/storage/framework/views/*
+!**/backend/storage/framework/views/.gitignore
+**/backend/storage/logs/*
+!**/backend/storage/logs/.gitignore
+**/frontend/.next/
+**/frontend/out/
+**/frontend/build/
+**/.turbo/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Testing / coverage
+**/backend/coverage/
+**/backend/.phpunit.result.cache
+**/frontend/coverage/
+
+# Misc
+*.log
+*.pem
+npm-debug.log*
+yarn-error.log*

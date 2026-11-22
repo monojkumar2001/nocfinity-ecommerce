@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* SHOP.CO Figma freebie tokens */
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --surface: #f0f0f0;
+  --hero: #f2f0f1;
+  --card-bg: #f0eeed;
+  --muted-foreground: rgba(0, 0, 0, 0.6);
+  --border: rgba(0, 0, 0, 0.1);
+  --accent: #000000;
+  --accent-hover: #333333;
+  --accent-soft: #f0f0f0;
+  --sale: #ff3333;
+  --sale-soft: rgba(255, 51, 51, 0.1);
+  --star: #ffc633;
+  --container: 77.5rem; /* ~1240px content inside 1440 frame */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-hero: var(--hero);
+  --color-card-bg: var(--card-bg);
+  --color-muted: var(--surface);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-sale: var(--sale);
+  --color-sale-soft: var(--sale-soft);
+  --color-star: var(--star);
+  --font-sans: var(--font-satoshi);
+  --font-display: var(--font-integral);
+  --radius-pill: 62px;
+  --radius-card: 20px;
+  --radius-image: 20px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-satoshi), system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-integral), var(--font-satoshi), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.container-shop {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-shop {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-shop {
+    padding-inline: 2.5rem;
+  }
+}
+
+.btn-pill {
+  border-radius: var(--radius-pill);
+}
+
+.section-title {
+  font-family: var(--font-integral), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Figma hero sparkle vectors */
+@keyframes sparkle-pulse {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.12) rotate(8deg);
+    opacity: 0.85;
+  }
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(0.9) rotate(-10deg);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.15) rotate(6deg);
+    opacity: 1;
+  }
+}
+
+.hero-sparkle {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+.hero-sparkle--lg {
+  animation: sparkle-pulse 2.8s ease-in-out infinite;
+}
+
+.hero-sparkle--sm {
+  animation: sparkle-twinkle 3.4s ease-in-out infinite;
+  animation-delay: 0.6s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-sparkle--lg,
+  .hero-sparkle--sm {
+    animation: none;
+  }
+}
