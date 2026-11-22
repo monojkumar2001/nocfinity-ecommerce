@@ -39,6 +39,8 @@ export type Product = {
   thumbnail: string | null;
   images: ProductImage[];
   description?: string | null;
+  average_rating?: number | null;
+  reviews_count?: number;
 };
 
 export type ProductDetailPayload = {
@@ -136,6 +138,7 @@ export type User = {
   roles?: string[];
   permissions?: string[];
   is_staff?: boolean;
+  two_factor_enabled?: boolean;
 };
 
 export type PaginationMeta = {

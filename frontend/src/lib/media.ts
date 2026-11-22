@@ -21,15 +21,13 @@ export function resolveMediaUrl(src?: string | null): string | null {
 
   try {
     const parsed = new URL(url);
-    const apiHost = new URL(apiBase).hostname;
+    const api = new URL(apiBase);
 
-    // Prefer the API host the frontend is configured to use.
-    if (
-      (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") &&
-      (apiHost === "localhost" || apiHost === "127.0.0.1")
-    ) {
-      parsed.hostname = apiHost;
-      parsed.port = new URL(apiBase).port || parsed.port;
+    // Rewrite local Laravel media hosts to the configured API origin (tunnels/prod).
+    if (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1") {
+      parsed.protocol = api.protocol;
+      parsed.hostname = api.hostname;
+      parsed.port = api.port;
       return parsed.toString();
     }
   } catch {

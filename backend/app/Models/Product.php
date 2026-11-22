@@ -52,4 +52,14 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function approvedReviews(): HasMany
+    {
+        return $this->reviews()->where('is_approved', true);
+    }
 }

@@ -21,6 +21,7 @@ class ProfileController extends Controller
             'email' => $user->email,
             'roles' => $user->getRoleNames()->values(),
             'permissions' => $user->getAllPermissions()->pluck('name')->values(),
+            'two_factor_enabled' => (bool) $user->two_factor_confirmed_at,
         ]);
     }
 

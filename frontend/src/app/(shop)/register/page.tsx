@@ -50,7 +50,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthCard title="Create account" subtitle="Join SHOP.CO">
+    <AuthCard title="Create account" subtitle="Join AURA">
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Full name"

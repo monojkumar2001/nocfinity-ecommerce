@@ -16,10 +16,14 @@ Full-stack mini e-commerce: **Laravel 12 API** (Sanctum + Spatie Permission + St
 ### 1. Infrastructure
 
 ```bash
-docker compose up -d
+# Full stack (MySQL + Mailpit + API + Next.js) — requires Docker Desktop
+docker compose up --build
+
+# Or infra only:
+docker compose up -d mysql mailpit
 ```
 
-Starts MySQL 8 (`3306`) and Mailpit (`1025` / `8025`).
+Full stack exposes storefront `:3000`, API `:8000`, Mailpit UI `:8025`.
 
 If Docker is unavailable, create a local MySQL database named `nocfinity_ecommerce` and point `.env` at it.
 
@@ -129,7 +133,7 @@ Catalog: 2-level categories (Men/Women → children) and **20 products** with im
 - `backend/` — JSON API. Domain logic in `app/Services` (cart totals, checkout, order numbers).
 - `frontend/` — Next.js App Router. `(shop)` for customers, `admin` for staff.
 - `docs/API.md` — endpoint reference.
-- `docker-compose.yml` — MySQL + Mailpit.
+- `docker-compose.yml` — one-command stack: MySQL + Mailpit + Laravel API + Next.js web.
 
 ### Order totals & stock security
 
@@ -176,15 +180,35 @@ Covered: RBAC middleware, order IDOR, stock/coupon rejection, login throttle, pa
 | Item | Status |
 |------|--------|
 | Guest cart merge | Implemented |
-| Docker Compose (MySQL + Mailpit) | Implemented |
-| Feature tests (checkout/stock/RBAC/security) | Implemented |
+| Docker Compose (MySQL + Mailpit + API + web) | Implemented (`docker compose up --build`) |
+| Feature tests (checkout/stock/RBAC/2FA/reviews) | Implemented |
 | Email verification on registration | Implemented (VerifyEmail + Mailpit; not required to checkout) |
-| 2FA (TOTP) | Skipped — timeboxed; would add `pragmarx/google2fa` on admin login |
-| Product reviews | Skipped — timeboxed |
+| 2FA (TOTP) for admin | Implemented (Profile setup + login challenge; recovery codes) |
+| Product reviews & ratings | Implemented (purchasers only; avg on catalog/PDP) |
+| Live demo | Cloudflare quick tunnels (ephemeral) — see **Live demo** below |
 | Activity logs | Skipped — timeboxed; would log admin mutations |
-| Live deploy | Skipped — local demo focus |
 | Dark mode toggle | Skipped — bonus not required |
 | Walkthrough video | Optional — not included in repo |
+
+## Live demo
+
+**Storefront (Cloudflare quick tunnel — live while Next is running):**  
+https://allows-dentists-lodge-deal.trycloudflare.com
+
+**API (Cloudflare quick tunnel — live while Laravel is running):**  
+https://alan-realm-equity-mhz.trycloudflare.com/api/v1/health
+
+**Always-on storefront/API (Vercel + Railway/Render):** deploy configs are ready (`frontend/vercel.json`, `backend/railway.toml`, `render.yaml`). One browser login to Vercel/Railway is required (no saved tokens on this machine). After API is up, set `NEXT_PUBLIC_API_URL` on Vercel and `FRONTEND_URL` / `APP_URL` on Laravel.
+
+**Local public tunnel recipe:**
+
+```bash
+# terminal A — API
+cloudflared tunnel --url http://127.0.0.1:8000
+
+# terminal B — Next (set NEXT_PUBLIC_API_URL to the API tunnel, then)
+cloudflared tunnel --url http://127.0.0.1:3000
+```
 
 ## What I would improve with more time
 
@@ -193,7 +217,7 @@ Covered: RBAC middleware, order IDOR, stock/coupon rejection, login throttle, pa
 - Full Figma token pass (exact typography / spacing audit)
 - Activity log for admin mutations
 - Broader coverage for concurrent stock races
-- Admin TOTP 2FA
+- Stable always-on hosting behind custom domains
 
 ## API docs
 

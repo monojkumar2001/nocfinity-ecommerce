@@ -74,8 +74,29 @@ export async function loginCustomer(data: { email: string; password: string }) {
   return payload;
 }
 
+type StaffLoginPayload =
+  | (AuthPayload & { requires_two_factor?: false })
+  | {
+      requires_two_factor: true;
+      challenge_token: string;
+      user?: never;
+      token?: never;
+    };
+
 export async function loginStaff(data: { email: string; password: string }) {
-  const { data: payload } = await apiRequest<AuthPayload>("/admin/login", {
+  const { data: payload } = await apiRequest<StaffLoginPayload>("/admin/login", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  if (payload.requires_two_factor) {
+    return payload;
+  }
+  setAuth(payload.token, payload.user);
+  return payload;
+}
+
+export async function verifyStaffTwoFactor(data: { challenge_token: string; code: string }) {
+  const { data: payload } = await apiRequest<AuthPayload>("/admin/login/2fa", {
     method: "POST",
     body: JSON.stringify(data),
   });

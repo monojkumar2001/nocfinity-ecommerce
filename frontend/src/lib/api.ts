@@ -1,6 +1,12 @@
 import type { PaginationMeta } from "./types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+function resolveApiUrl(): string {
+  // Always same-origin in the browser (Next rewrite → Laravel).
+  if (typeof window !== "undefined") {
+    return "/backend-api";
+  }
+  return process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000/api/v1";
+}
 
 export const CART_TOKEN_KEY = "nf_cart_token";
 export const AUTH_TOKEN_KEY = "nf_token";
@@ -80,7 +86,7 @@ export async function apiRequest<T>(
     headers.delete("Content-Type");
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`${resolveApiUrl()}${endpoint}`, {
     ...options,
     headers,
   });

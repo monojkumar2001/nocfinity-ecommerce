@@ -78,10 +78,10 @@ export function Header() {
         <Link href="/" className="shrink-0" aria-label="Home">
           <Image
             src={homeLogo}
-            alt="SHOP.CO"
+            alt="AURA"
             width={159}
             height={24}
-            className="h-5 w-auto sm:h-6"
+            className="h-5 w-auto invert sm:h-6"
             priority
           />
         </Link>

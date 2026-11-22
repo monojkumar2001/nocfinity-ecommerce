@@ -86,7 +86,7 @@ export function AdminPanelShell({ children }: { children: React.ReactNode }) {
           </button>
           <div className="min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/home/logo.png" alt="SHOP.CO" className="h-5 w-auto invert" />
+            <img src="/images/home/logo.png" alt="AURA" className="h-5 w-auto invert" />
             <p className="truncate text-xs text-muted-foreground">{user.name}</p>
           </div>
         </header>

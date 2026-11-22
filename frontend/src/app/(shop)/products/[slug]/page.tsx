@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/format";
 import { SafeDescription } from "@/components/shop/SafeDescription";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { StarRating, ratingFromId } from "@/components/shop/StarRating";
+import { ProductReviews } from "@/components/shop/ProductReviews";
 import { Button } from "@/components/ui/Button";
 import { Spinner } from "@/components/ui/Spinner";
 import { useCart } from "@/hooks/useCart";
@@ -139,7 +140,13 @@ export default function ProductDetailPage() {
           <h1 className="font-display text-3xl font-bold uppercase leading-tight sm:text-[40px]">
             {product.name}
           </h1>
-          <StarRating rating={ratingFromId(product.id)} className="mt-3" />
+          <StarRating
+            rating={product.average_rating ?? ratingFromId(product.id)}
+            className="mt-3"
+          />
+          {product.reviews_count ? (
+            <p className="mt-1 text-sm text-black/60">{product.reviews_count} reviews</p>
+          ) : null}
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <span className="text-2xl font-bold sm:text-[32px]">{formatCurrency(product.price)}</span>
             {product.compare_at_price ? (
@@ -213,6 +220,12 @@ export default function ProductDetailPage() {
           {message ? <p className="mt-3 text-sm text-black/60">{message}</p> : null}
         </div>
       </div>
+
+      <ProductReviews
+        slug={product.slug}
+        averageRating={product.average_rating ?? null}
+        reviewsCount={product.reviews_count ?? 0}
+      />
 
       {related.length ? (
         <section className="mt-16 sm:mt-20">

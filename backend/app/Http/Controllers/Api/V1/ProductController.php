@@ -18,6 +18,8 @@ class ProductController extends Controller
     {
         $query = Product::query()
             ->with(['category', 'images'])
+            ->withAvg('approvedReviews as average_rating', 'rating')
+            ->withCount('approvedReviews as reviews_count')
             ->when($request->boolean('active_only', !$request->user()?->can('products.view')), fn ($q) => $q->where('is_active', true))
             ->when($request->filled('search'), function ($q) use ($request) {
                 $term = '%' . $request->string('search') . '%';
@@ -81,12 +83,16 @@ class ProductController extends Controller
     public function show(string $slug)
     {
         $product = Product::with(['category', 'images'])
+            ->withAvg('approvedReviews as average_rating', 'rating')
+            ->withCount('approvedReviews as reviews_count')
             ->where(function ($q) use ($slug) {
                 $q->where('slug', $slug)->orWhere('id', $slug);
             })
             ->firstOrFail();
 
         $related = Product::with('images')
+            ->withAvg('approvedReviews as average_rating', 'rating')
+            ->withCount('approvedReviews as reviews_count')
             ->where('category_id', $product->category_id)
             ->where('id', '!=', $product->id)
             ->where('is_active', true)
@@ -303,6 +309,10 @@ class ProductController extends Controller
                 ?? $images->first()['url']
                 ?? null,
             'images' => $images,
+            'average_rating' => $product->average_rating !== null
+                ? round((float) $product->average_rating, 1)
+                : null,
+            'reviews_count' => (int) ($product->reviews_count ?? 0),
         ];
 
         if ($detailed) {

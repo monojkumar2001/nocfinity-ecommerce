@@ -121,10 +121,10 @@ export function Footer() {
             <Link href="/" className="inline-block" aria-label="Home">
               <Image
                 src={homeLogo}
-                alt="SHOP.CO"
+                alt="AURA"
                 width={159}
                 height={24}
-                className="h-[23px] w-auto"
+                className="h-[23px] w-auto invert"
               />
             </Link>
             <p className="mt-4 text-sm leading-[22px] text-black/60">

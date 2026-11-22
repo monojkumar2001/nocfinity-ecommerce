@@ -66,7 +66,7 @@ export function AdminSidebar({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/home/logo.png"
-              alt="SHOP.CO"
+              alt="AURA"
               className="h-7 w-auto invert"
             />
           </Link>

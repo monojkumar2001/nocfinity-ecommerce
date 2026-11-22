@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\Admin\OrderAdminController;
 use App\Http\Controllers\Api\V1\Admin\ProfileController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
 use App\Http\Controllers\Api\V1\Admin\StaffController;
+use App\Http\Controllers\Api\V1\Admin\TwoFactorController;
 use App\Http\Controllers\Api\V1\AdminAuthController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Api\V1\CouponController;
 use App\Http\Controllers\Api\V1\FilterOptionController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -39,11 +41,15 @@ Route::prefix('v1')->group(function () {
         ->name('verification.verify');
 
     // Separate admin auth guard / portal (Sanctum ability: admin)
-    Route::post('/admin/login', [AdminAuthController::class, 'login']);
+    Route::post('/admin/login', [AdminAuthController::class, 'login'])
+        ->middleware('throttle:10,1');
+    Route::post('/admin/login/2fa', [AdminAuthController::class, 'verifyTwoFactor'])
+        ->middleware('throttle:10,1');
 
     // Public catalog
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{slug}', [ProductController::class, 'show']);
+    Route::get('/products/{slug}/reviews', [ProductReviewController::class, 'index']);
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/filter-options', [FilterOptionController::class, 'index']);
 
@@ -70,12 +76,19 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/orders', [OrderController::class, 'index']);
         Route::get('/orders/{order}', [OrderController::class, 'show']);
+        Route::post('/products/{slug}/reviews', [ProductReviewController::class, 'store'])
+            ->middleware('throttle:10,1');
 
         // Admin (staff role + admin-scoped token from /admin/login)
         Route::prefix('admin')->middleware('staff')->group(function () {
             Route::post('/logout', [AdminAuthController::class, 'logout']);
             Route::get('/me', [ProfileController::class, 'show']);
             Route::put('/profile', [ProfileController::class, 'update']);
+
+            Route::get('/2fa', [TwoFactorController::class, 'status']);
+            Route::post('/2fa/setup', [TwoFactorController::class, 'setup']);
+            Route::post('/2fa/confirm', [TwoFactorController::class, 'confirm']);
+            Route::delete('/2fa', [TwoFactorController::class, 'disable']);
 
             Route::get('/dashboard', [DashboardController::class, 'index'])
                 ->middleware('permission:reports.view');

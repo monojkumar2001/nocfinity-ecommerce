@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: nocfinity-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: mysql
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: RUN_SEEDERS
+        value: "true"
+      - fromDatabase:
+          name: nocfinity-mysql
+          property: host
+        key: DB_HOST
+      - fromDatabase:
+          name: nocfinity-mysql
+          property: port
+        key: DB_PORT
+      - fromDatabase:
+          name: nocfinity-mysql
+          property: database
+        key: DB_DATABASE
+      - fromDatabase:
+          name: nocfinity-mysql
+          property: user
+        key: DB_USERNAME
+      - fromDatabase:
+          name: nocfinity-mysql
+          property: password
+        key: DB_PASSWORD
+
+databases:
+  - name: nocfinity-mysql
+    plan: free
+    databaseName: nocfinity
+    user: nocfinity

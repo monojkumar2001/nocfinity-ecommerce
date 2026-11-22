@@ -7,7 +7,7 @@ import { StarRating, ratingFromId } from "@/components/shop/StarRating";
 
 export function ProductCard({ product }: { product: Product }) {
   const image = resolveMediaUrl(product.thumbnail ?? product.images[0]?.url);
-  const rating = ratingFromId(product.id);
+  const rating = product.average_rating ?? ratingFromId(product.id);
   const discount =
     product.compare_at_price && product.compare_at_price > product.price
       ? Math.round(((product.compare_at_price - product.price) / product.compare_at_price) * 100)

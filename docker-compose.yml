@@ -27,5 +27,61 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nocfinity-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: "Nocfinity Shop"
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: ${APP_KEY:-base64:ReplaceWithPhpArtisanKeyGenerateOutput=======}
+      APP_URL: http://localhost:8000
+      FRONTEND_URL: http://localhost:3000
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: nocfinity_ecommerce
+      DB_USERNAME: nocfinity
+      DB_PASSWORD: secret
+      CACHE_STORE: database
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_FROM_ADDRESS: noreply@nocfinity.test
+      SANCTUM_STATEFUL_DOMAINS: localhost:3000,127.0.0.1:3000
+      STRIPE_KEY: ${STRIPE_KEY:-pk_test_replace_me}
+      STRIPE_SECRET: ${STRIPE_SECRET:-sk_test_replace_me}
+      STRIPE_CURRENCY: usd
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: "true"
+      PORT: 8000
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+        NEXT_PUBLIC_APP_URL: http://localhost:3000
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${STRIPE_KEY:-pk_test_replace_me}
+    container_name: nocfinity-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
 volumes:
   mysql_data:

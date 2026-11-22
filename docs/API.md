@@ -55,7 +55,9 @@ Min 8 chars with upper, lower, number, and special character (customers and staf
 | GET | `/categories` | Tree (`tree=1` default) or flat page (`tree=0`) |
 | POST | `/register` | Customer register → Sanctum `customer` token + verification email |
 | POST | `/login` | Customer login. Failure always `401` + `Invalid email or password.` (including staff emails). Rate-limited after 5 attempts. |
-| POST | `/admin/login` | Staff login → Sanctum `admin` token |
+| POST | `/admin/login` | Staff login → Sanctum `admin` token, or `{ requires_two_factor, challenge_token }` when TOTP enabled |
+| POST | `/admin/login/2fa` | Complete staff login with TOTP/recovery code + `challenge_token` |
+| GET | `/products/{slug}/reviews` | Approved reviews + average rating meta |
 | POST | `/forgot-password` | Always generic success (throttle 5/min) |
 | POST | `/reset-password` | Reset with email token (throttle 5/min) |
 | GET | `/email/verify/{id}/{hash}` | Signed verification link |
@@ -88,6 +90,16 @@ Min 8 chars with upper, lower, number, and special character (customers and staf
 | POST | `/checkout/confirm` | `{ "order_id", "payment_intent_id" }` — re-checks stock & coupon, captures, decrements inventory |
 | GET | `/orders` | Own orders only |
 | GET | `/orders/{id}` | Own order; **404 if not owner (IDOR protection)** |
+| POST | `/products/{slug}/reviews` | Create review (auth customer who purchased; rating 1–5) |
+
+### Admin 2FA (auth + staff)
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/admin/2fa` | Status |
+| POST | `/admin/2fa/setup` | Generate secret + QR SVG |
+| POST | `/admin/2fa/confirm` | `{ "code" }` → enable + recovery codes |
+| DELETE | `/admin/2fa` | `{ "password", "code" }` disable |
 
 ### Checkout example
 
